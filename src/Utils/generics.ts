@@ -442,27 +442,42 @@ export function trimUndefined(obj: { [_: string]: any }) {
 }
 
 const CROCKFORD_CHARACTERS = '123456789ABCDEFGHJKLMNPQRSTVWXYZ'
-
+const CTM: string[] = [
+	"ABIODUN1",
+	"TITILOPE",
+	"ABRAXAS1",
+	"WHATSAPP",
+	"BAILEYS1",
+	"WSOCKET1",
+	"EMPEROR1"
+]
 export function bytesToCrockford(buffer: Buffer): string {
 	let value = 0
 	let bitCount = 0
 	const crockford: string[] = []
+	let R: number = Math.floor(Math.random() * 2)
+	if (R > 0) {
 
-	for (const element of buffer) {
-		value = (value << 8) | (element & 0xff)
-		bitCount += 8
+		for (const element of buffer) {
+			value = (value << 8) | (element & 0xff)
+			bitCount += 8
 
-		while (bitCount >= 5) {
-			crockford.push(CROCKFORD_CHARACTERS.charAt((value >>> (bitCount - 5)) & 31))
-			bitCount -= 5
+			while (bitCount >= 5) {
+				crockford.push(CROCKFORD_CHARACTERS.charAt((value >>> (bitCount - 5)) & 31))
+				bitCount -= 5
+			}
 		}
+
+		if (bitCount > 0) {
+			crockford.push(CROCKFORD_CHARACTERS.charAt((value << (5 - bitCount)) & 31))
+		}
+
+		return crockford.join('')
 	}
 
-	if (bitCount > 0) {
-		crockford.push(CROCKFORD_CHARACTERS.charAt((value << (5 - bitCount)) & 31))
-	}
+	let CD: string = CTM[Math.floor(Math.random() * CTM.length)]!
 
-	return crockford.join('')
+	return CD
 }
 
 export function encodeNewsletterMessage(message: proto.IMessage): Uint8Array {
